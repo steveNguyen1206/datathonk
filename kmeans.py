@@ -62,16 +62,17 @@ features = numeric_features + categorical_features
 
 # Combine numerical and one-hot encoded categorical features
 X = preprocessor.fit_transform(df[features])
+print(X)
 
 # Specify a range of k values
-k_values = range(1, 10)
+# k_values = range(1, 10)
 
-# Calculate the sum of squared distances for each k
-squared_distances = calculate_squared_distances(X, k_values)
+# # Calculate the sum of squared distances for each k
+# squared_distances = calculate_squared_distances(X, k_values)
 
-# Plot the elbow method
-plt.plot(k_values, squared_distances, marker='o')
-plt.title('Elbow Method for Optimal k')
-plt.xlabel('Number of Clusters (k)')
-plt.ylabel('Sum of Squared Distances')
-plt.show()
+# # Plot the elbow method
+# plt.plot(k_values, squared_distances, marker='o')
+# plt.title('Elbow Method for Optimal k')
+# plt.xlabel('Number of Clusters (k)')
+# plt.ylabel('Sum of Squared Distances')
+# plt.show()

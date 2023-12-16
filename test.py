@@ -1,30 +1,43 @@
 import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.pipeline import Pipeline
+import numpy as np
+import matplotlib.pyplot as plt
 
-# Example DataFrame
-data = {
-    'Location': ['City1', 'City2', 'City1', 'City2', 'City3', 'City3', 'City4', 'City4'],
-    'Color': ['Red', 'Blue', 'Red', 'Blue', 'Green', 'Yellow', 'Green', 'Yellow'],
-    'Size': ['Small', 'Medium', 'Small', 'Medium', 'Large', 'ExtraLarge', 'Large', 'ExtraLarge'],
-    'Heel': ['Low', 'Medium', 'Low', 'Medium', 'High', 'Low', 'High', 'Medium']
-}
+# Example DataFrame (replace this with your actual data loading code)
+data = {'attribute1': ['A', 'B', 'A', 'C'],
+        'attribute2': ['X', 'Y', 'Z', 'X'],
+        'attribute3': ['High', 'Low', 'Medium', 'High'],
+        'attribute4': ['Male', 'Female', 'Male', 'Female'],
+        'initial_count': [100, 150, 200, 120]}
+product_df = pd.DataFrame(data)
 
-df = pd.DataFrame(data)
+# Get unique combinations of attributes
+unique_combinations = product_df[['attribute1', 'attribute2', 'attribute3', 'attribute4']].drop_duplicates()
+print(unique_combinations)
 
-# Categorical features to one-hot encode
-categorical_features = ['Location', 'Color', 'Size', 'Heel']
+# Select the first 10 unique combinations for plotting
+selected_combinations = unique_combinations.head(2)
 
-# Create a pipeline with one-hot encoding for categorical features
-categorical_transformer = Pipeline(steps=[
-    ("encoder", OneHotEncoder(handle_unknown="ignore"))
-])
+# Simulation parameters
+num_days = 10
 
-# Apply the pipeline to the categorical features
-transformed_categorical = categorical_transformer.fit_transform(df)
+# Initialize the result DataFrame
+result_df = pd.DataFrame(columns=['day'] + list(selected_combinations.itertuples(index=False, name=None)))
 
-# Display the result
-print(transformed_categorical)
+# Loop through each day
+for day in range(1, num_days + 1):
+    # Simulate changes in product counts (replace this with your actual simulation logic)
+    changes = np.random.randint(-10, 11, len(selected_combinations))
+    product_df['current_count']= product_df['initial_count'].head(2) + changes
 
-# print(pd.get_dummies(df[categorical_features], dtype=int))
+    print(product_df.set_index(list(selected_combinations))['current_count'].head(2))
+
+    # Record the state in the result DataFrame
+    result_df = pd.concat([result_df, pd.DataFrame({'day': [day], **product_df.set_index(list(selected_combinations))['current_count'].to_dict()})])
+
+# Plot the results
+result_df.set_index('day').plot(marker='o')
+plt.title('Product Count Over 100 Days (Top 10 Types)')
+plt.xlabel('Day')
+plt.ylabel('Product Count')
+plt.legend(title='Attribute Combinations')
+plt.show()
